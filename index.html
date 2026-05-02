@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Someday</title>
+
+  <!-- PWA / iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Someday" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="theme-color" content="#F8F7F4" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ===== APP SHELL ===== -->
+  <div id="app">
+
+    <!-- SCREENS -->
+    <div id="screen-today" class="screen active"></div>
+    <div id="screen-list"  class="screen"></div>
+    <div id="screen-categories" class="screen"></div>
+    <div id="screen-archive" class="screen"></div>
+    <div id="screen-settings" class="screen"></div>
+
+    <!-- BOTTOM NAV -->
+    <nav id="bottom-nav">
+      <button class="nav-btn active" data-screen="today">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        <span>Today</span>
+      </button>
+      <button class="nav-btn" data-screen="list">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        <span>List</span>
+      </button>
+      <button class="nav-btn" data-screen="categories">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        <span>Categories</span>
+      </button>
+      <button class="nav-btn" data-screen="archive">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <span>Archive</span>
+      </button>
+      <button class="nav-btn" data-screen="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </button>
+    </nav>
+
+    <!-- FAB -->
+    <button id="fab" aria-label="Add dream">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </button>
+  </div>
+
+  <!-- ===== MODALS ===== -->
+
+  <!-- Add / Edit Item -->
+  <div id="modal-item" class="modal" role="dialog" aria-modal="true">
+    <div class="modal-backdrop"></div>
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <h2 id="modal-item-title">New Dream</h2>
+        <button class="modal-close" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="item-id" />
+        <div class="field">
+          <label for="item-title">Dream</label>
+          <input type="text" id="item-title" placeholder="Something you want to do, see, or feel…" autocomplete="off" />
+        </div>
+        <div class="field">
+          <label for="item-category">Category</label>
+          <select id="item-category"></select>
+        </div>
+        <div class="field row">
+          <div class="field-half">
+            <label>Priority</label>
+            <select id="item-priority">
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+              <option value="dream">Dream</option>
+            </select>
+          </div>
+          <div class="field-half">
+            <label>Status</label>
+            <select id="item-status">
+              <option value="not_started">Not Started</option>
+              <option value="planned">Planned</option>
+              <option value="in_progress">In Progress</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="item-notes">Notes</label>
+          <textarea id="item-notes" placeholder="Why does this matter to you?"></textarea>
+        </div>
+        <div class="field">
+          <label for="item-target">Target Date (optional)</label>
+          <input type="text" id="item-target" placeholder="e.g. Summer 2027" />
+        </div>
+        <div class="field">
+          <label for="item-location">Location (optional)</label>
+          <input type="text" id="item-location" placeholder="e.g. Iceland, Norway…" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-delete-item" class="btn-danger hidden">Delete</button>
+        <button id="btn-save-item" class="btn-primary">Save Dream</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Completion Modal -->
+  <div id="modal-complete" class="modal" role="dialog" aria-modal="true">
+    <div class="modal-backdrop"></div>
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <h2>You did it. ✦</h2>
+        <button class="modal-close" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p id="complete-item-name" class="complete-item-name"></p>
+        <div class="field">
+          <label for="complete-memory">Your Memory</label>
+          <textarea id="complete-memory" placeholder="What will you always remember about this?"></textarea>
+        </div>
+        <div class="field">
+          <label for="complete-with">Who were you with?</label>
+          <input type="text" id="complete-with" placeholder="Solo, or names…" />
+        </div>
+        <div class="field">
+          <label for="complete-date">When?</label>
+          <input type="date" id="complete-date" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-save-complete" class="btn-primary">Save Memory</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Item Detail -->
+  <div id="modal-detail" class="modal" role="dialog" aria-modal="true">
+    <div class="modal-backdrop"></div>
+    <div class="modal-sheet modal-sheet--full">
+      <div class="modal-handle"></div>
+      <div id="detail-content"></div>
+    </div>
+  </div>
+
+  <!-- Add Category -->
+  <div id="modal-category" class="modal" role="dialog" aria-modal="true">
+    <div class="modal-backdrop"></div>
+    <div class="modal-sheet modal-sheet--small">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <h2>New Category</h2>
+        <button class="modal-close" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="field">
+          <label for="cat-name">Name</label>
+          <input type="text" id="cat-name" placeholder="e.g. Wild Adventures" />
+        </div>
+        <div class="field">
+          <label>Colour</label>
+          <div id="cat-color-picker" class="color-picker"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-save-category" class="btn-primary">Add Category</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Celebration Overlay -->
+  <div id="celebration" class="celebration hidden">
+    <div class="celebration-inner">
+      <div class="celebration-icon">✦</div>
+      <p class="celebration-text">You did it.</p>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      });
+    }
+  </script>
+</body>
+</html>
